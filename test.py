@@ -10,12 +10,14 @@ import generate_data
 
 # On met les coordonnées dans des tableaux
 # Les inputs_train sont les coordonnées sur lesquels notre programme va apprendre
-inputs_train = generate_data.generateData(80)
+inputs_train = generate_data.generateData(80, -100, 100)
 # Les inputs_work sont les coordonnées sur lesquels notre programme va s'exercer
-inputs_work = generate_data.generateData(20)
+inputs_work = generate_data.generateData(20, -100, 100)
+
+p = perceptron.perceptron()
 
 # On va créer notre perceptron
-p = perceptron.perceptron
+p
 
 # On entraîne notre perceptron avec les inputs_train
 p.train(inputs_train)
