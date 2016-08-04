@@ -4,15 +4,23 @@ import random
 import math
 
 class perceptron:
-    def __init__(self):
+    def __init__(self, lRate, threshold):
         """Permet d'initialiser les bases du perceptron
         C'est la première étape du processus d'un perceptron"""
 
         # On défini le pas d'apprentissage
-        self.lRate = 0.1
+        if 0.0 <= lRate <= 1.0:
+            self.lRate = lRate
+        else:
+            print("Vous devez mettre un pas d'apprentissage entre 0.0 et 1.0")
+            (quit)
 
         # On défini le seuil
-        self.threshold = 0.5
+        if 0.0 <= threshold <= 1.0:
+            self.threshold = threshold
+        else:
+            print("Vous devez mettre un seuil entre 0.0 et 1.0")
+            quit()
 
         # On initialise le poids pour chaque entrée
         self.w = []
@@ -22,24 +30,24 @@ class perceptron:
         # On initialise le biais
         self.bias = random.uniform(-1, 1)
 
+        # On défini a et b de la fonction f(x)
+        self.a = random.uniform(-50, 50)
+        self.b = random.uniform(-5, 5)
+
     def f(self, x):
         """Permet de calculer une fonction f(x)"""
 
         # On défini la fonction que l'on va utiliser
         # Peut donc être facilement changeable
-        try :
-            self.a
-            self.b
-        except AttributeError:
-            self.a = random.uniform(-50, 50)
-            self.b = random.uniform(-5, 5)
+        # /!\ ATTENTION /!\ : Le perceptron ne peut que gérer les
+        # fonctions linéaires !
         return(self.a * x + self.b)
 
     def sigmoid(self, x):
         """Renvoi la valeur de la fonction sigmoïde"""
 
         # Pour éviter un OverflowError au niveau de 0
-        # Car il arrondi à 1, mais pas pour les 10^-x
+        # Car il arrondi à 1, mais pas 0 (pour les 10^-x)
         try:
         # On défini la fonction sigmoïde
             res = 1 / (1 + math.exp(-x))
@@ -61,17 +69,17 @@ class perceptron:
         """Permet d'envoyer la sortie du perceptron
         C'est la dernière étape du processus d'un perceptron"""
 
-        # On envoi en sortie la réponse de la fonction sigmoïde
+        # On envoi en sortie la réponse de la fonction sigmoïde en fonction du seuil
         if self.sigmoid(self.sumStep(coor)) >= self.threshold:
             return 1
-        return -1
+        return 0
 
         # Cela peut être une autre solution pour apprendre :
         # La fonction de Heaviside
         # y = self.sumStep(coor) + self.bias
         # if y >= self.threshold:
         #     return 1
-        # return -1
+        # return 0
 
     def realAnswer(self, coor):
         """Permet d'obtenir le bon résultat
@@ -80,7 +88,7 @@ class perceptron:
         # Si y > f(x), alors le point est au-dessus
         if coor[1] > self.f(coor[0]):
             return 1
-        return -1
+        return 0
 
     def adjustWeights(self, coor, intervalError):
         """Permet d'ajuster le poids de chaque entrée, afin de bien répondre"""
@@ -104,9 +112,9 @@ class perceptron:
                 self.adjustWeights(coor, intervalError)
                 globalError += abs(intervalError)
             # On regarde si il est totalement juste
-            # print("iteration = {}\nglobalError = {}".format(iteration, globalError)) #TEST
             if globalError == 0:
                 break
+        print ("Nombre d'itération durant l'entrainement : ", iteration)
 
     def test(self, inputs):
         """Permet de tester les connaissances du perceptron"""
@@ -115,4 +123,4 @@ class perceptron:
         for coor in inputs:
             intervalError = self.realAnswer(coor) - self.activationStep(coor)
             globalError += abs(intervalError)
-        print("Nombre d'erreurs lors du test : ", globalError / 2)
+        print("Nombre d'erreurs lors du test : ", int(globalError))

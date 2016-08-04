@@ -1,9 +1,6 @@
 
 """Ce fichier permet de faire des tests sur le programme"""
 
-# Les modules externe
-from matplotlib.pylab import *
-
 # Mes modules
 import perceptron
 import generate_data
@@ -12,10 +9,11 @@ import generate_data
 # Les inputs_train sont les coordonnées sur lesquels notre programme va apprendre
 inputs_train = generate_data.generateData(80, -100, 100)
 # Les inputs_work sont les coordonnées sur lesquels notre programme va s'exercer
-inputs_work = generate_data.generateData(20, -100, 100)
+inputs_work = generate_data.generateData(999, -100, 100)
 
 # On va créer notre perceptron
-p = perceptron.perceptron()
+# Il a pour option (dans l'ordre) le pas d'apprentissage et le seuil
+p = perceptron.perceptron(0.1, 0.7)
 
 # On entraîne notre perceptron avec les inputs_train
 p.train(inputs_train)

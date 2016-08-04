@@ -6,14 +6,24 @@ def generateData(iteration, minc, maxc):
     """Permet de génerer des coordonnées sur un plan en 2D.
     Il renvoi un tableau contenant les coordonnées x et y"""
 
-    # Verification si la valeur est bien un entier
-    if not isinstance(iteration, int) or not isinstance(minc, int) \
-    or not isinstance(maxc, int):
-        print("generateData : Vous n'avez pas rentrer de bonne valeur")
-        return 0
-    if maxc < minc:
+    # On vérifie si la valeur est bien un entier
+    if not isinstance((iteration or minc or maxc), int):
+        print("generateData : Vous n'avez pas rentré de bonne valeur")
+        quit()
+    # On verifie si le maximum est plus grand que le minimum
+    if maxc <= minc:
         print("generateData : Le maximum doit être plus grand que votre \
-        minimum")
+minimum")
+        quit()
+    # On vérifie si notre itération est bien positive
+    if iteration <= 0:
+        print("generateData : Votre nombre d'itération est incorrect.")
+        quit()
+    # On limite l'utilisateur en terme de valeur
+    if not -9999 <= (iteration or minc or maxc) <= 9999:
+        print("generateData : Un des nombres que vous avez rentré en paramètre \
+est trop petit ou trop grand.")
+        quit()
 
     # Génère les coordonnées
     inputs = []
