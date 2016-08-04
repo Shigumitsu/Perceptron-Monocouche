@@ -14,15 +14,11 @@ inputs_train = generate_data.generateData(80, -100, 100)
 # Les inputs_work sont les coordonnées sur lesquels notre programme va s'exercer
 inputs_work = generate_data.generateData(20, -100, 100)
 
-p = perceptron.perceptron()
-
 # On va créer notre perceptron
-p
+p = perceptron.perceptron()
 
 # On entraîne notre perceptron avec les inputs_train
 p.train(inputs_train)
 
 # On test ensuite ses capacitées à travailler seul
 p.test(inputs_work)
-
-# On affiche ensuite les résultats sur un graphique

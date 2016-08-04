@@ -1,7 +1,7 @@
 
 # Les modules externe
 import random
-import numpy as np
+import math
 
 class perceptron:
     def __init__(self):
@@ -9,7 +9,10 @@ class perceptron:
         C'est la première étape du processus d'un perceptron"""
 
         # On défini le pas d'apprentissage
-        self.lRate = 0.5
+        self.lRate = 0.1
+
+        # On défini le seuil
+        self.threshold = 0.5
 
         # On initialise le poids pour chaque entrée
         self.w = []
@@ -35,15 +38,21 @@ class perceptron:
     def sigmoid(self, x):
         """Renvoi la valeur de la fonction sigmoïde"""
 
+        # Pour éviter un OverflowError au niveau de 0
+        # Car il arrondi à 1, mais pas pour les 10^-x
+        try:
         # On défini la fonction sigmoïde
-        return 1.0 / (1 + np.exp(-x))
+            res = 1 / (1 + math.exp(-x))
+        except OverflowError:
+            res = 0.0
+        return res
 
     def sumStep(self, coor):
         """Permet de faire la somme de tout les poids
         C'est la seconde étape du processus d'un perceptron"""
 
         # On fait la somme de tous les poids
-        sumw = self.bias
+        sumw = 0.0
         for i in range(2):
             sumw += coor[i] * self.w[i]
         return sumw
@@ -53,7 +62,16 @@ class perceptron:
         C'est la dernière étape du processus d'un perceptron"""
 
         # On envoi en sortie la réponse de la fonction sigmoïde
-        return self.sigmoid(self.sumStep(coor))
+        if self.sigmoid(self.sumStep(coor)) >= self.threshold:
+            return 1
+        return -1
+
+        # Cela peut être une autre solution pour apprendre :
+        # La fonction de Heaviside
+        # y = self.sumStep(coor) + self.bias
+        # if y >= self.threshold:
+        #     return 1
+        # return -1
 
     def realAnswer(self, coor):
         """Permet d'obtenir le bon résultat
@@ -62,7 +80,7 @@ class perceptron:
         # Si y > f(x), alors le point est au-dessus
         if coor[1] > self.f(coor[0]):
             return 1
-        return 0
+        return -1
 
     def adjustWeights(self, coor, intervalError):
         """Permet d'ajuster le poids de chaque entrée, afin de bien répondre"""
@@ -76,8 +94,8 @@ class perceptron:
         La fonction train est en quelques sorte un professeur qui lui si oui
         ou non les réponses sont justes."""
 
-        for iteration in range(10000000000000):
-            globalError = 0.0
+        for iteration in range(100):
+            globalError = 0
             for coor in inputs:
                 # On compare la réponse du perceptron avec la vrai réponse
                 intervalError = self.realAnswer(coor) - self.activationStep(coor)
@@ -86,6 +104,15 @@ class perceptron:
                 self.adjustWeights(coor, intervalError)
                 globalError += abs(intervalError)
             # On regarde si il est totalement juste
-            print("iteration = {}\nglobalError = {}".format(iteration, globalError)) #TEST
-            if globalError == 0.0:
+            # print("iteration = {}\nglobalError = {}".format(iteration, globalError)) #TEST
+            if globalError == 0:
                 break
+
+    def test(self, inputs):
+        """Permet de tester les connaissances du perceptron"""
+
+        globalError = 0
+        for coor in inputs:
+            intervalError = self.realAnswer(coor) - self.activationStep(coor)
+            globalError += abs(intervalError)
+        print("Nombre d'erreurs lors du test : ", globalError / 2)

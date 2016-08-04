@@ -19,5 +19,4 @@ def generateData(iteration, minc, maxc):
     inputs = []
     for i in range(iteration):
         inputs.extend([[random.randrange(minc, maxc) for j in range(2)]])
-        i
     return (inputs)
