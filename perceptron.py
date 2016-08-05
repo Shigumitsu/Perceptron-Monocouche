@@ -2,6 +2,8 @@
 # Les modules externe
 import random
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
 class perceptron:
     def __init__(self, lRate, threshold):
@@ -69,10 +71,13 @@ class perceptron:
         """Permet d'envoyer la sortie du perceptron
         C'est la dernière étape du processus d'un perceptron"""
 
+        # On envoi en sortie la réponse de la fonction sigmoïde
+        return self.sigmoid(self.sumStep(coor))
+
         # On envoi en sortie la réponse de la fonction sigmoïde en fonction du seuil
-        if self.sigmoid(self.sumStep(coor)) >= self.threshold:
-            return 1
-        return 0
+        # if self.sigmoid(self.sumStep(coor)) >= self.threshold:
+        #     return 1
+        # return 0
 
         # Cela peut être une autre solution pour apprendre :
         # La fonction de Heaviside
@@ -102,7 +107,8 @@ class perceptron:
         La fonction train est en quelques sorte un professeur qui lui si oui
         ou non les réponses sont justes."""
 
-        for iteration in range(100):
+        globalErrortab = np.array([])
+        for iteration in range(1000):
             globalError = 0
             for coor in inputs:
                 # On compare la réponse du perceptron avec la vrai réponse
@@ -112,15 +118,35 @@ class perceptron:
                 self.adjustWeights(coor, intervalError)
                 globalError += abs(intervalError)
             # On regarde si il est totalement juste
-            if globalError == 0:
+            globalErrortab = np.append(globalErrortab, globalError)
+            if globalError <= 0.1:
                 break
+        print ("Le nombre global d'erreur pendant l'entrainment est de : ", globalError)
         print ("Nombre d'itération durant l'entrainement : ", iteration)
+
+        # Permet de tracer un graphique du nbr global d'erreur / nbr d'itération
+        plt.plot(np.arange(iteration + 1), globalErrortab)
+        plt.title("Nbr global d'erreur pdt l'entrainement en fct du \
+nbr d'itération")
+        plt.xlabel("Nbr d'itération")
+        plt.ylabel("Nbr d'erreur global")
+        plt.show()
 
     def test(self, inputs):
         """Permet de tester les connaissances du perceptron"""
 
         globalError = 0
+        globalErrortab = np.array([])
         for coor in inputs:
             intervalError = self.realAnswer(coor) - self.activationStep(coor)
             globalError += abs(intervalError)
-        print("Nombre d'erreurs lors du test : ", int(globalError))
+            globalErrortab = np.append(globalErrortab, globalError)
+        print("Nombre d'erreurs lors du test : ", globalError)
+
+        # Permet de tracer un graphique du nbr global d'erreur / nbr d'itération
+        plt.plot(np.arange(len(inputs)), globalErrortab)
+        plt.title("Nbr global d'erreur pdt les tests en fct du \
+nbr d'itération")
+        plt.xlabel("Nbr d'itération")
+        plt.ylabel("Nbr d'erreur global")
+        plt.show()
