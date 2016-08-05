@@ -33,8 +33,8 @@ class perceptron:
         self.bias = random.uniform(-1, 1)
 
         # On défini a et b de la fonction f(x)
-        self.a = random.uniform(-50, 50)
-        self.b = random.uniform(-5, 5)
+        self.a = random.randrange(-50, 50)
+        self.b = random.randrange(-5, 5)
 
     def f(self, x):
         """Permet de calculer une fonction f(x)"""
@@ -107,6 +107,7 @@ class perceptron:
         La fonction train est en quelques sorte un professeur qui lui si oui
         ou non les réponses sont justes."""
 
+        # Tableau pour connaitre l'évolution des erreurs global
         globalErrortab = np.array([])
         for iteration in range(1000):
             globalError = 0
@@ -121,8 +122,27 @@ class perceptron:
             globalErrortab = np.append(globalErrortab, globalError)
             if globalError <= 0.1:
                 break
+
         print ("Le nombre global d'erreur pendant l'entrainment est de : ", globalError)
         print ("Nombre d'itération durant l'entrainement : ", iteration)
+
+        # Calcul de la pente de la fonction
+        print ("La pente de la fonction est de : ", (self.f(1) - self.f(0)))
+
+        # On cherche la pente du perceptron, afin de prouver
+        # que notre perceptron marche
+        for y in range(2):
+            for x in np.arange(-50.0, 51.0, 0.0001):
+                # print(self.activationStep([x, y]))
+                if 0.495 <= self.activationStep([x, y]) <= 0.505:
+                    if y == 0:
+                        xa = x
+                    else:
+                        xb = x
+                    break
+
+        # On affiche les résultats
+        print ("La pente devinée est de : ", 1 / (xb - xa))
 
         # Permet de tracer un graphique du nbr global d'erreur / nbr d'itération
         plt.plot(np.arange(iteration + 1), globalErrortab)
