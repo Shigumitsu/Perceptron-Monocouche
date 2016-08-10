@@ -179,7 +179,7 @@ class Perceptron(object):
 # nbr d'itération")
 #         plt.xlabel("Nbr d'itération")
 #         plt.ylabel("Nbr d'erreur global")
-        plt.show()
+#         plt.show()
 
     def test(self, inputs):
         """Permet de tester les connaissances du perceptron"""
