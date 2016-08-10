@@ -5,7 +5,7 @@
 import random
 import math
 
-# # A décommenter uniquement si vous voulez prouver l'efficacité du programme
+# A décommenter uniquement si vous voulez prouver l'efficacité du programme
 # import matplotlib.pyplot as plt
 # import numpy as np
 
@@ -83,7 +83,7 @@ class Perceptron(object):
         C'est la seconde étape du processus d'un perceptron"""
 
         # On fait la somme de tous les poids
-        sumw = 0.0
+        sumw = self.__bias
         for i in range(2):
             sumw += coor[i] * self.__weights[i]
         return sumw
@@ -121,6 +121,7 @@ class Perceptron(object):
 
         for _ in range(2):
             self.__weights[_] += coor[_] * intervalerror * self.__l_rate
+        self.__bias += intervalerror * self.__l_rate
 
 
     def train(self, inputs):
@@ -152,8 +153,8 @@ class Perceptron(object):
         print("Le nombre global d'erreur pendant l'entrainment est de : ", globalerror)
         print("Nombre d'itération durant l'entrainement : ", iteration)
 
-#         # Ralenti le programme, mais permet de prouver que notre perceptron marche
-#         # Décommentez aussi l.131 et l.142
+        # Ralenti le programme, mais permet de prouver que notre perceptron marche
+        # Décommentez aussi l.133 et l.144
 #         # Calcul de la pente de la fonction
 #         print("La pente de la fonction est de : ", (self.func_f(1) - self.func_f(0)))
 #
@@ -178,7 +179,7 @@ class Perceptron(object):
 # nbr d'itération")
 #         plt.xlabel("Nbr d'itération")
 #         plt.ylabel("Nbr d'erreur global")
-#         plt.show()
+        plt.show()
 
     def test(self, inputs):
         """Permet de tester les connaissances du perceptron"""
@@ -191,9 +192,9 @@ class Perceptron(object):
             # globalerrortab = np.append(globalerrortab, globalerror)
         print("Nombre d'erreurs lors du test : ", globalerror)
 
-#         # Ralenti le programme, mais permet de prouver que notre perceptron marche
-#         # Décommentez aussi l.186 et l.190
-#         # Permet de tracer un graphique du nbr global d'erreur / nbr d'itération
+        # Ralenti le programme, mais permet de prouver que notre perceptron marche
+        # Décommentez aussi l.188 et l.192
+        # Permet de tracer un graphique du nbr global d'erreur / nbr d'itération
 #         plt.plot(np.arange(len(inputs)), globalerrortab)
 #         plt.title("Nbr global d'erreur pdt les tests en fct du \
 # nbr d'itération")
